@@ -456,7 +456,7 @@ onMounted(() => {
           size="small"
           :columns="resultColumns"
           :data="searchResults"
-          :bordered="false"
+          :bordered="true"
           :pagination="{ pageSize: 8 }"
         />
       </NFormItem>

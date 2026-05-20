@@ -186,25 +186,6 @@ const selectedNotificationTypes = computed<string[]>({
   },
 })
 
-const cleanupActionOptions = computed(() => [
-  { label: t('preferences.delete-torrent-after-complete'), value: 'torrent' },
-  { label: t('preferences.auto-delete-stale-records'), value: 'stale' },
-  { label: t('preferences.clear-completed-on-exit'), value: 'completed' },
-])
-const selectedCleanupActions = computed<string[]>({
-  get: () => [
-    ...(form.value.deleteTorrentAfterComplete ? ['torrent'] : []),
-    ...(form.value.autoDeleteStaleRecords ? ['stale'] : []),
-    ...(form.value.clearCompletedOnExit ? ['completed'] : []),
-  ],
-  set: (actions) => {
-    const selected = new Set(actions)
-    form.value.deleteTorrentAfterComplete = selected.has('torrent')
-    form.value.autoDeleteStaleRecords = selected.has('stale')
-    form.value.clearCompletedOnExit = selected.has('completed')
-  },
-})
-
 function parseSpeedLimit(value: unknown) {
   const str = String(value || '0')
   const num = parseInt(str, 10) || 0
@@ -568,8 +549,14 @@ onMounted(async () => {
 
       <!-- Auto Cleanup -->
       <NDivider title-placement="left">{{ t('preferences.auto-cleanup') }}</NDivider>
-      <NFormItem label=" ">
-        <PreferenceCheckboxGrid v-model:value="selectedCleanupActions" :options="cleanupActionOptions" />
+      <NFormItem :label="t('preferences.delete-torrent-after-complete')">
+        <NSwitch v-model:value="form.deleteTorrentAfterComplete" />
+      </NFormItem>
+      <NFormItem :label="t('preferences.auto-delete-stale-records')">
+        <NSwitch v-model:value="form.autoDeleteStaleRecords" />
+      </NFormItem>
+      <NFormItem :label="t('preferences.clear-completed-on-exit')">
+        <NSwitch v-model:value="form.clearCompletedOnExit" />
       </NFormItem>
     </NForm>
     <PreferenceActionBar :is-dirty="isDirty" @save="handleSave" @discard="handleReset" @restart="handleManualRestart" />
