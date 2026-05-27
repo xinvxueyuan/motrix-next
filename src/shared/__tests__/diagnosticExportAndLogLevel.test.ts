@@ -5,7 +5,7 @@
  *   - Rust: `export_diagnostic_logs` command in fs.rs
  *   - Rust: command registered in invoke_handler in lib.rs
  *   - Frontend: export button in Advanced.vue developer section
- *   - i18n: 'export-diagnostic-logs' key in all 26 locales
+ *   - i18n: 'export-diagnostic-logs' key in all 27 locales
  *
  * Gap 4: Log level is restart-required and uses standard Rust level names
  *   - `log-level` in needRestartKeys (configKeys.ts)
@@ -31,6 +31,7 @@ const ALL_LOCALES = [
   'fa',
   'fr',
   'hu',
+  'hi',
   'id',
   'it',
   'ja',
@@ -130,7 +131,7 @@ describe('Gap 3: Diagnostic log export', () => {
     })
   })
 
-  describe('i18n — export-diagnostic-logs key in all 26 locales', () => {
+  describe('i18n — export-diagnostic-logs key in all 27 locales', () => {
     for (const locale of ALL_LOCALES) {
       it(`${locale}/preferences.js has 'export-diagnostic-logs' key`, () => {
         const content = fs.readFileSync(path.join(LOCALES_DIR, locale, 'preferences.js'), 'utf-8')
@@ -188,7 +189,7 @@ describe('Gap 4: Log level configuration', () => {
     })
   })
 
-  describe('i18n — log-level key in all 26 locales', () => {
+  describe('i18n — log-level key in all 27 locales', () => {
     for (const locale of ALL_LOCALES) {
       it(`${locale}/preferences.js has 'log-level' key`, () => {
         const content = fs.readFileSync(path.join(LOCALES_DIR, locale, 'preferences.js'), 'utf-8')

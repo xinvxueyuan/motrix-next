@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest'
 import { isRTL, getLangDirection, calcFormLabelWidth, resolveSystemLocale } from '../locale'
 
-const AVAILABLE = ['en-US', 'zh-CN', 'zh-TW', 'ja', 'ko', 'fr', 'de', 'pt-BR', 'ar', 'fa']
+const AVAILABLE = ['en-US', 'zh-CN', 'zh-TW', 'ja', 'ko', 'fr', 'de', 'pt-BR', 'ar', 'fa', 'hi']
 
 describe('resolveSystemLocale', () => {
   it('returns exact match when available', () => {
@@ -19,6 +19,9 @@ describe('resolveSystemLocale', () => {
   })
   it('matches single-segment locale directly', () => {
     expect(resolveSystemLocale('ja', AVAILABLE)).toBe('ja')
+  })
+  it('matches Hindi region locales to Hindi', () => {
+    expect(resolveSystemLocale('hi-IN', AVAILABLE)).toBe('hi')
   })
   it('falls back to en-US for unknown locale', () => {
     expect(resolveSystemLocale('xx-YY', AVAILABLE)).toBe('en-US')

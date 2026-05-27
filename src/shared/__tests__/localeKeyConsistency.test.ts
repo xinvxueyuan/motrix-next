@@ -1,7 +1,7 @@
 /**
  * @fileoverview Locale key consistency tests.
  *
- * Validates that all 26 locale directories contain the same set of
+ * Validates that all 27 locale directories contain the same set of
  * translation keys in their preferences.js and task.js files. Uses en-US as the
  * canonical reference. Detects missing keys (incomplete translations)
  * and extra keys (typos or stale translations).
@@ -41,6 +41,7 @@ const EXPECTED_LOCALES = [
   'fa',
   'fr',
   'hu',
+  'hi',
   'id',
   'it',
   'ja',
@@ -62,7 +63,7 @@ const EXPECTED_LOCALES = [
 const enUsKeys = extractKeys(join(LOCALES_DIR, 'en-US', 'preferences.js'))
 
 describe('locale key consistency (preferences.js)', () => {
-  it('contains all 26 expected locale directories', () => {
+  it('contains all 27 expected locale directories', () => {
     for (const locale of EXPECTED_LOCALES) {
       expect(allLocales, `Missing locale directory: ${locale}`).toContain(locale)
     }

@@ -15,7 +15,7 @@ import { resolve } from 'path'
 const TAURI_ROOT = resolve(__dirname, '..', '..', '..', 'src-tauri')
 const CONFIG_PATH = resolve(TAURI_ROOT, 'tauri.conf.json')
 
-/** All 26 app locales mapped to their NSIS language identifiers. */
+/** All 27 app locales mapped to their NSIS language identifiers. */
 const EXPECTED_NSIS_LANGUAGES = [
   'Arabic',
   'Bulgarian',
@@ -27,6 +27,7 @@ const EXPECTED_NSIS_LANGUAGES = [
   'Farsi',
   'French',
   'Hungarian',
+  'Hindi',
   'Indonesian',
   'Italian',
   'Japanese',
@@ -125,7 +126,7 @@ describe('NSIS installer brand configuration', () => {
       expect(nsis.displayLanguageSelector).toBe(true)
     })
 
-    it('lists all 26 app locales as NSIS languages', () => {
+    it('lists all 27 app locales as NSIS languages', () => {
       const nsis = getNsisConfig()
       expect(nsis.languages).toBeDefined()
       expect(nsis.languages).toHaveLength(EXPECTED_NSIS_LANGUAGES.length)

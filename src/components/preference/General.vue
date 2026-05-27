@@ -201,6 +201,7 @@ const localeOptions = [
   { label: 'Ελληνικά · Greek', value: 'el' },
   { label: 'فارسی · Persian', value: 'fa' },
   { label: 'Magyar · Hungarian', value: 'hu' },
+  { label: 'हिन्दी · Hindi', value: 'hi' },
   { label: 'Bahasa Indonesia · Indonesian', value: 'id' },
   { label: 'Italiano · Italian', value: 'it' },
   { label: 'Norsk Bokmål · Norwegian', value: 'nb' },

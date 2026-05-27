@@ -32,8 +32,8 @@ const EN_US_TEXTS: TaskNotificationTexts = TaskNotificationTexts {
 
 #[cfg(test)]
 const SUPPORTED_LOCALES: &[&str] = &[
-    "ar", "bg", "ca", "de", "el", "en-US", "es", "fa", "fr", "hu", "id", "it", "ja", "ko", "nb",
-    "nl", "pl", "pt-BR", "ro", "ru", "th", "tr", "uk", "vi", "zh-CN", "zh-TW",
+    "ar", "bg", "ca", "de", "el", "en-US", "es", "fa", "fr", "hu", "hi", "id", "it", "ja", "ko",
+    "nb", "nl", "pl", "pt-BR", "ro", "ru", "th", "tr", "uk", "vi", "zh-CN", "zh-TW",
 ];
 
 pub fn resolve_supported_locale(raw_locale: &str) -> &'static str {
@@ -53,6 +53,7 @@ pub fn resolve_supported_locale(raw_locale: &str) -> &'static str {
         "fa" => "fa",
         "fr" => "fr",
         "hu" => "hu",
+        "hi" => "hi",
         "id" => "id",
         "it" => "it",
         "ja" => "ja",
@@ -74,6 +75,7 @@ pub fn resolve_supported_locale(raw_locale: &str) -> &'static str {
         _ if locale.starts_with("en") => "en-US",
         _ if locale.starts_with("es") => "es",
         _ if locale.starts_with("fr") => "fr",
+        _ if locale.starts_with("hi") => "hi",
         _ if locale.starts_with("it") => "it",
         _ if locale.starts_with("pt") => "pt-BR",
         "zh-HK" => "zh-TW",
@@ -196,6 +198,18 @@ pub fn texts_for_locale(locale: &str) -> TaskNotificationTexts {
             download_failed_title: "Letöltés sikertelen",
             download_failed_body: "{taskName}: {reason}",
             error_unknown: "Unknown error",
+        },
+        "hi" => TaskNotificationTexts {
+            download_start_title: "डाउनलोड शुरू हुआ",
+            download_start_body: "\"{taskName}\" डाउनलोड शुरू हुआ",
+            download_batch_start_body: "\"{taskName}\" और {count} अन्य कार्य डाउनलोड होने लगे",
+            download_complete_title: "डाउनलोड पूरा हुआ",
+            download_complete_body: "सहेजा गया: {taskName}",
+            bt_complete_title: "BT डाउनलोड पूरा हुआ",
+            bt_complete_body: "Seeding शुरू हुआ: {taskName}",
+            download_failed_title: "डाउनलोड विफल",
+            download_failed_body: "{taskName}: {reason}",
+            error_unknown: "अज्ञात त्रुटि",
         },
         "id" => TaskNotificationTexts {
             download_start_title: "Unduhan dimulai",
@@ -429,6 +443,7 @@ mod tests {
         assert_eq!(resolve_supported_locale("zh-Hans-CN"), "zh-CN");
         assert_eq!(resolve_supported_locale("en-AU"), "en-US");
         assert_eq!(resolve_supported_locale("pt-PT"), "pt-BR");
+        assert_eq!(resolve_supported_locale("hi-IN"), "hi");
     }
 
     #[test]
@@ -439,7 +454,7 @@ mod tests {
 
     #[test]
     fn all_supported_locales_have_notification_texts() {
-        assert_eq!(SUPPORTED_LOCALES.len(), 26);
+        assert_eq!(SUPPORTED_LOCALES.len(), 27);
         for locale in SUPPORTED_LOCALES {
             let texts = texts_for_locale(locale);
             assert!(
