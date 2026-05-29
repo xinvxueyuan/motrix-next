@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /** @fileoverview Main application layout with sidebar, subnav, and IPC event handling. */
-import { computed, h, ref, nextTick, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, ref, nextTick, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
@@ -60,7 +60,6 @@ interface MagnetSelectionSession {
 
 const { t } = useI18n()
 const route = useRoute()
-const router = useRouter()
 const appStore = useAppStore()
 const taskStore = useTaskStore()
 const preferenceStore = usePreferenceStore()
@@ -229,37 +228,6 @@ watch(
     preferenceStore.dbUpgradeVersion = null
   },
   { immediate: true },
-)
-
-// ── Protocol association confirmation dialog ────────────────────────
-// syncProtocolHandlers() in main.ts detects unregistered protocols at
-// startup and posts them to appStore.pendingProtocolHijack.  This watcher
-// picks them up once the Naive UI dialog provider is active.
-watch(
-  () => appStore.pendingProtocolHijack,
-  (hijacked) => {
-    if (!hijacked || hijacked.length === 0) return
-    const protocolList = hijacked.join(', ')
-    const rawContent = t('app.protocol-hijacked-dialog-content', { protocols: protocolList })
-    navDialog.warning({
-      title: t('app.protocol-hijacked-title'),
-      content: () =>
-        rawContent.split('\n').reduce<(string | ReturnType<typeof h>)[]>((acc, line, i) => {
-          if (i > 0) acc.push(h('br'))
-          if (line) acc.push(line)
-          return acc
-        }, []),
-      positiveText: t('preferences.open-settings'),
-      negativeText: t('app.dismiss'),
-      onPositiveClick: () => {
-        if (route.path !== '/preference/advanced') {
-          router.push('/preference/advanced')
-        }
-      },
-    })
-    appStore.pendingProtocolHijack = []
-  },
-  { deep: true, immediate: true },
 )
 
 // ── Stat listener — passive subscription to Rust stat_service events ──

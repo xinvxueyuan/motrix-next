@@ -86,10 +86,6 @@ export default {
   'migration-success': 'उपयोगकर्ता सेटिंग schema {version} पर अपग्रेड हुआ',
   'migration-incomplete': 'उपयोगकर्ता सेटिंग schema {version} पर पूरी तरह अपग्रेड नहीं हो सका',
   'db-upgraded': 'डेटाबेस schema {version} पर अपग्रेड हुआ',
-  'protocol-hijacked-title': 'Link association पुष्टि चाहता है',
-  'protocol-hijacked-body': '{protocols} Motrix Next से संबद्ध नहीं है',
-  'protocol-hijacked-dialog-content':
-    '{protocols} protocol इस समय Motrix Next से संबद्ध नहीं है। संबंधित link क्लिक करने पर यह ऐप अपने आप नहीं खुलेगा।\nयह आम तौर पर नई installation, version update, या किसी दूसरे download tool द्वारा association लेने से होता है। Settings → Advanced Settings में संबंधित protocol association फिर चालू किया जा सकता है।',
   dismiss: 'समझ गया',
   'speedometer-limit-applied': 'Speed limit लागू हुई',
   'speedometer-limit-removed': 'Speed limit हटाई गई',

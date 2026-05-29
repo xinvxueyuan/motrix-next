@@ -258,53 +258,6 @@ if (import.meta.env.PROD) {
     }
   }
 
-  /**
-   * Cross-platform protocol handler sync.
-   *
-   * For each enabled protocol, queries the OS via `is_default_protocol_client`
-   * (macOS: NSWorkspace, Windows: win_registry, Linux: deep-link plugin).
-   *
-   * If an enabled protocol is not handled by this app:
-   *  1. Sends an OS-level notification (visible even if window is hidden)
-   *  2. Signals appStore.pendingProtocolHijack for the UI dialog
-   *
-   * Does NOT auto-disable config toggles — the user decides in Settings.
-   */
-  async function syncProtocolHandlers(config: typeof preferenceStore.config): Promise<void> {
-    try {
-      const { invoke } = await import('@tauri-apps/api/core')
-      const hijacked: string[] = []
-
-      for (const [protocol, enabled] of Object.entries(config.protocols)) {
-        if (!enabled) continue
-        try {
-          const isDefault = await invoke<boolean>('is_default_protocol_client', { protocol })
-          if (!isDefault) {
-            logger.info('ProtocolSync', `${protocol} is not the default handler`)
-            hijacked.push(protocol)
-          }
-        } catch (e) {
-          // Per-protocol errors must not block other protocols
-          logger.debug('ProtocolSync', `${protocol}: ${(e as Error).message}`)
-        }
-      }
-
-      if (hijacked.length === 0) return
-
-      // 1. OS-level notification
-      await invoke('send_app_system_notification', {
-        title: i18n.global.t('app.protocol-hijacked-title'),
-        body: i18n.global.t('app.protocol-hijacked-body', { protocols: hijacked.join(', ') }),
-      })
-
-      // 2. Signal UI to show dialog (consumed by MainLayout/useAppEvents)
-      //    Does NOT modify config — user keeps control of their toggles.
-      appStore.pendingProtocolHijack = hijacked
-    } catch (e) {
-      logger.debug('ProtocolSync', e)
-    }
-  }
-
   async function bootstrapMainWindow(): Promise<void> {
     // ── Phase 1: critical path → window visible ASAP ──────────────────────
     await preferenceStore.loadPreference()
@@ -382,14 +335,14 @@ if (import.meta.env.PROD) {
     // appStore.engineRestarting drives the engine banner in MainLayout.
     const enginePromise = initEngine(port, secret, config)
 
-    // ── Phase 3: non-critical IPC (parallel) ──────────────────────────────
+    // ── Phase 3: non-critical IPC ────────────────────────────────────────
     //
     // External input routing is owned by Rust and consumed from
     // `take_pending_deep_links` after MainLayout registers listeners. Do not
     // call tauri-plugin-deep-link `getCurrent()` here: that value is
     // process-level plugin state, so lightweight-mode WebView recreation would
     // replay stale torrent/protocol inputs.
-    Promise.allSettled([syncAutostart(config), syncProtocolHandlers(config)])
+    Promise.allSettled([syncAutostart(config)])
 
     // Start UPnP port mapping if enabled (fire-and-forget)
     if (config.enableUpnp) {

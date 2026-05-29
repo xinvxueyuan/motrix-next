@@ -21,6 +21,8 @@ import {
   buildAdvancedSystemConfig,
   transformAdvancedForStore,
   validateAdvancedForm,
+  applyProtocolStatusToForm,
+  type ProtocolStatus,
   randomRpcPort,
 } from '@/composables/useAdvancedPreference'
 import {
@@ -74,6 +76,12 @@ const clipboardTypeOptions = computed(() => [
   { label: t('preferences.clipboard-thunder'), value: 'thunder' },
   { label: t('preferences.clipboard-bt-hash'), value: 'btHash' },
 ])
+const protocolEntries = [
+  ['magnet', 'protocolMagnet'],
+  ['ed2k', 'protocolEd2k'],
+  ['thunder', 'protocolThunder'],
+  ['motrixnext', 'protocolMotrixnext'],
+] as const
 const clipboardFieldByType: Record<ClipboardType, keyof typeof form.value> = {
   http: 'clipboardHttp',
   ftp: 'clipboardFtp',
@@ -93,6 +101,7 @@ const selectedClipboardTypes = computed<string[]>({
 })
 
 const MANUAL_PROTOCOL_CHANGE_REQUIRED = 'manual_change_required'
+const defaultProtocols = { magnet: false, ed2k: false, thunder: false, motrixnext: true }
 
 const aria2ConfPath = ref('')
 const sessionPath = ref('')
@@ -270,47 +279,7 @@ const { form, isDirty, handleSave, handleReset, resetSnapshot } = usePreferenceF
       }
     }
 
-    // Protocol handler registration (reconcile-based).
-    {
-      const prevProtocols = prevConfig.protocols ?? { magnet: false, ed2k: false, thunder: false, motrixnext: true }
-      for (const [protocol, formKey, prev] of [
-        ['magnet', 'protocolMagnet', prevProtocols.magnet],
-        ['ed2k', 'protocolEd2k', prevProtocols.ed2k],
-        ['thunder', 'protocolThunder', prevProtocols.thunder],
-        ['motrixnext', 'protocolMotrixnext', prevProtocols.motrixnext],
-      ] as const) {
-        const enabled = f[formKey] as boolean
-        try {
-          if (enabled) {
-            const isDefault = await invoke<boolean>('is_default_protocol_client', { protocol })
-            if (!isDefault) {
-              await invoke('set_default_protocol_client', { protocol })
-              message.success(t('preferences.protocol-registered', { protocol }))
-            }
-          } else if (prev) {
-            await invoke('remove_as_default_protocol_client', { protocol })
-            message.success(t('preferences.protocol-unregistered', { protocol }))
-          }
-        } catch (e) {
-          const reason =
-            e instanceof Error
-              ? e.message
-              : typeof e === 'object' && e !== null
-                ? Object.values(e as Record<string, unknown>).join(': ')
-                : String(e)
-          logger.warn('Advanced.protocol', `Failed to ${enabled ? 'register' : 'unregister'} ${protocol}: ${reason}`)
-          if (!enabled && reason.includes(MANUAL_PROTOCOL_CHANGE_REQUIRED)) {
-            message.warning(t('preferences.protocol-unregister-manual-required'))
-          } else {
-            message.error(t('preferences.protocol-failed', { protocol, reason }))
-          }
-          ;(f as Record<string, unknown>)[formKey] = prev
-          resetSnapshot()
-          const revertedProtocols = { ...preferenceStore.config.protocols, [protocol]: prev }
-          preferenceStore.updateAndSave({ protocols: revertedProtocols })
-        }
-      }
-    }
+    await reconcileProtocolHandlers(f, prevConfig.protocols ?? defaultProtocols)
   },
 })
 
@@ -328,6 +297,66 @@ function buildForm() {
 
 function loadForm() {
   Object.assign(form.value, buildForm())
+}
+
+async function readProtocolStatus(): Promise<ProtocolStatus> {
+  const entries = await Promise.all(
+    protocolEntries.map(async ([protocol]) => {
+      const enabled = await invoke<boolean>('is_default_protocol_client', { protocol })
+      return [protocol, enabled] as const
+    }),
+  )
+  return Object.fromEntries(entries) as unknown as ProtocolStatus
+}
+
+async function refreshProtocolStatus(target = form.value, persist = false) {
+  const status = await readProtocolStatus()
+  applyProtocolStatusToForm(target, status)
+  if (persist) {
+    await preferenceStore.updateAndSave({ protocols: status })
+  }
+  resetSnapshot()
+}
+
+async function reconcileProtocolHandlers(target: typeof form.value, previous: ProtocolStatus) {
+  for (const [protocol, formKey] of protocolEntries) {
+    const enabled = target[formKey] as boolean
+    if (enabled === previous[protocol]) continue
+    try {
+      await applyProtocolHandler(protocol, enabled)
+    } catch (e) {
+      showProtocolError(protocol, enabled, e)
+    }
+  }
+  await refreshProtocolStatus(target, true)
+}
+
+async function applyProtocolHandler(protocol: keyof ProtocolStatus, enabled: boolean) {
+  if (enabled) {
+    const isDefault = await invoke<boolean>('is_default_protocol_client', { protocol })
+    if (!isDefault) {
+      await invoke('set_default_protocol_client', { protocol })
+      message.success(t('preferences.protocol-registered', { protocol }))
+    }
+    return
+  }
+  await invoke('remove_as_default_protocol_client', { protocol })
+  message.success(t('preferences.protocol-unregistered', { protocol }))
+}
+
+function showProtocolError(protocol: keyof ProtocolStatus, enabled: boolean, error: unknown) {
+  const reason =
+    error instanceof Error
+      ? error.message
+      : typeof error === 'object' && error !== null
+        ? Object.values(error as Record<string, unknown>).join(': ')
+        : String(error)
+  logger.warn('Advanced.protocol', `Failed to ${enabled ? 'register' : 'unregister'} ${protocol}: ${reason}`)
+  if (!enabled && reason.includes(MANUAL_PROTOCOL_CHANGE_REQUIRED)) {
+    message.warning(t('preferences.protocol-unregister-manual-required'))
+  } else {
+    message.error(t('preferences.protocol-failed', { protocol, reason }))
+  }
 }
 
 async function loadPaths() {
@@ -431,12 +460,7 @@ onMounted(async () => {
   // This ensures the switches reflect reality even if another app has taken
   // over the protocol association since Motrix last ran.
   try {
-    form.value.protocolMagnet = await invoke<boolean>('is_default_protocol_client', { protocol: 'magnet' })
-    form.value.protocolEd2k = await invoke<boolean>('is_default_protocol_client', { protocol: 'ed2k' })
-    form.value.protocolThunder = await invoke<boolean>('is_default_protocol_client', { protocol: 'thunder' })
-    form.value.protocolMotrixnext = await invoke<boolean>('is_default_protocol_client', { protocol: 'motrixnext' })
-    // Patch snapshot so OS-queried values don't falsely trigger dirty state.
-    resetSnapshot()
+    await refreshProtocolStatus()
   } catch (e) {
     logger.debug('Advanced.protocolCheck', e)
   }

@@ -113,8 +113,6 @@ export const useAppStore = defineStore('app', () => {
   }
   const engineReady = ref(false)
   const pendingMagnetGids = ref<string[]>([])
-  /** Protocols detected as hijacked at startup (set by syncProtocolHandlers). */
-  const pendingProtocolHijack = ref<string[]>([])
   const externalInputSubmitting = ref(false)
   let externalInputSubmitCount = 0
   let externalInputErrorHandler: ((error: unknown) => void) | null = null
@@ -611,7 +609,6 @@ export const useAppStore = defineStore('app', () => {
     handleExternalInputs,
     setExternalInputErrorHandler,
     setExternalInputStartHandler,
-    pendingProtocolHijack,
     pendingFilename,
     externalInputSubmitting,
   }

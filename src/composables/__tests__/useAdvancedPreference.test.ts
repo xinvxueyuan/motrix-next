@@ -11,6 +11,7 @@ import {
   buildAdvancedSystemConfig,
   transformAdvancedForStore,
   validateAdvancedForm,
+  applyProtocolStatusToForm,
   isValidAria2ProxyUrl,
   isValidTrackerSourceUrl,
   randomRpcPort,
@@ -502,6 +503,26 @@ describe('transformAdvancedForStore', () => {
     expect(diff).not.toHaveProperty('dhtListenPort')
     expect(diff).not.toHaveProperty('rpcListenPort')
     expect(diff).not.toHaveProperty('rpcSecret')
+  })
+})
+
+// ── applyProtocolStatusToForm ───────────────────────────────────────
+
+describe('applyProtocolStatusToForm', () => {
+  it('copies OS protocol status into the form fields', () => {
+    const form = buildAdvancedForm({ ...DEFAULT_APP_CONFIG } as AppConfig).form
+
+    applyProtocolStatusToForm(form, {
+      magnet: true,
+      ed2k: false,
+      thunder: true,
+      motrixnext: false,
+    })
+
+    expect(form.protocolMagnet).toBe(true)
+    expect(form.protocolEd2k).toBe(false)
+    expect(form.protocolThunder).toBe(true)
+    expect(form.protocolMotrixnext).toBe(false)
   })
 })
 

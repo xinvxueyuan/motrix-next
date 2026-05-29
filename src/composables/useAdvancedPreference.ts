@@ -88,6 +88,13 @@ export interface AdvancedForm {
   fileAllocation: string
 }
 
+export interface ProtocolStatus {
+  magnet: boolean
+  ed2k: boolean
+  thunder: boolean
+  motrixnext: boolean
+}
+
 // ── Pure Functions ──────────────────────────────────────────────────
 
 /**
@@ -234,6 +241,13 @@ export function transformAdvancedForStore(f: AdvancedForm): Record<string, unkno
       motrixnext: protocolMotrixnext,
     },
   }
+}
+
+export function applyProtocolStatusToForm(f: AdvancedForm, status: ProtocolStatus): void {
+  f.protocolMagnet = status.magnet
+  f.protocolEd2k = status.ed2k
+  f.protocolThunder = status.thunder
+  f.protocolMotrixnext = status.motrixnext
 }
 
 // ── Form validation ─────────────────────────────────────────────────

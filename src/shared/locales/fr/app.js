@@ -88,10 +88,6 @@ export default {
   'migration-incomplete':
     "La structure des paramètres utilisateur n'a pas pu être entièrement mise à jour vers {version}",
   'db-upgraded': 'Schéma de base de données mis à jour vers {version}',
-  'protocol-hijacked-title': "L'association de liens nécessite une confirmation",
-  'protocol-hijacked-body': "{protocols} n'est pas associé à Motrix Next",
-  'protocol-hijacked-dialog-content':
-    "Le protocole {protocols} n'est actuellement pas associé à Motrix Next. Les liens concernés ne pourront pas ouvrir automatiquement l'application.\nCela est généralement dû à une première installation, une mise à jour de version ou un autre outil de téléchargement ayant pris le contrôle de l'association. Vous pouvez réactiver l'association du protocole correspondant dans Paramètres → Paramètres avancés.",
   dismiss: 'Compris',
   'speedometer-limit-applied': 'Limite de vitesse appliquée',
   'speedometer-limit-removed': 'Limite de vitesse supprimée',
