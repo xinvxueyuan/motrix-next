@@ -9,9 +9,11 @@
 mod args;
 mod cleanup;
 mod lifecycle;
+mod log_level;
 mod state;
 
 pub(crate) use args::SUPPORTED_ENGINE_KEYS;
 pub use lifecycle::{restart_engine, start_engine, stop_engine};
+pub(crate) use log_level::{valid_aria2_log_level, DEFAULT_ARIA2_LOG_LEVEL};
 pub(crate) use state::path_to_safe_string;
 pub use state::EngineState;

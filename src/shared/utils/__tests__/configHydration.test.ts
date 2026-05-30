@@ -4,7 +4,8 @@ import {
   COLOR_SCHEMES,
   DEFAULT_APP_CONFIG,
   FILE_ALLOCATION_OPTIONS,
-  LOG_LEVELS,
+  APP_LOG_LEVELS,
+  ARIA2_LOG_LEVELS,
   PROXY_SCOPE_OPTIONS,
   UPDATE_CHANNELS,
 } from '@shared/constants'
@@ -83,6 +84,19 @@ describe('hydrateAppConfig', () => {
     )
   })
 
+  it('accepts aria2 notice logs without allowing notice for Motrix logs', () => {
+    const result = hydrateAppConfig({
+      configVersion: CONFIG_VERSION,
+      logLevel: 'notice',
+      aria2LogLevel: 'notice',
+    })
+
+    expect(result.config.logLevel).toBe(DEFAULT_APP_CONFIG.logLevel)
+    expect(result.config.aria2LogLevel).toBe('notice')
+    expect(result.repairs).toContain('logLevel')
+    expect(result.repairs).not.toContain('aria2LogLevel')
+  })
+
   it('repairs invalid nested values and keeps valid nested values', () => {
     const result = hydrateAppConfig({
       configVersion: CONFIG_VERSION,
@@ -140,8 +154,9 @@ describe('hydrateAppConfig', () => {
     expect(['auto', 'light', 'dark']).toContain(DEFAULT_APP_CONFIG.theme)
     expect(COLOR_SCHEMES.some((scheme) => scheme.id === DEFAULT_APP_CONFIG.colorScheme)).toBe(true)
     expect(UPDATE_CHANNELS).toContain(DEFAULT_APP_CONFIG.updateChannel)
-    expect(LOG_LEVELS).toContain(DEFAULT_APP_CONFIG.logLevel)
-    expect(LOG_LEVELS).toContain(DEFAULT_APP_CONFIG.aria2LogLevel)
+    expect(APP_LOG_LEVELS).toContain(DEFAULT_APP_CONFIG.logLevel)
+    expect(ARIA2_LOG_LEVELS).toContain(DEFAULT_APP_CONFIG.aria2LogLevel)
+    expect(DEFAULT_APP_CONFIG.aria2LogLevel).toBe('warn')
     expect(FILE_ALLOCATION_OPTIONS).toContain(DEFAULT_APP_CONFIG.fileAllocation)
     expect(DEFAULT_APP_CONFIG.proxy.scope).toEqual(PROXY_SCOPE_OPTIONS)
   })

@@ -15,7 +15,7 @@ import { useProtocolHandlers, type ProtocolKey } from '@/composables/useProtocol
 import { relaunch } from '@tauri-apps/plugin-process'
 import { useIpc } from '@/composables/useIpc'
 import { appDataDir, appLogDir, join, tempDir } from '@tauri-apps/api/path'
-import { LOG_LEVELS } from '@shared/constants'
+import { APP_LOG_LEVELS, ARIA2_LOG_LEVELS } from '@shared/constants'
 import {
   generateSecret,
   buildAdvancedForm,
@@ -66,7 +66,8 @@ const { isLinux } = usePlatform()
 import { ENGINE_RPC_PORT } from '@shared/constants'
 import { diffConfig, checkIsNeedRestart } from '@shared/utils/config'
 
-const logLevelOptions = LOG_LEVELS.map((l: string) => ({ label: l, value: l }))
+const appLogLevelOptions = APP_LOG_LEVELS.map((level) => ({ label: level, value: level }))
+const aria2LogLevelOptions = ARIA2_LOG_LEVELS.map((level) => ({ label: level, value: level }))
 
 type ClipboardType = 'http' | 'ftp' | 'magnet' | 'ed2k' | 'thunder' | 'btHash'
 const clipboardTypes: ClipboardType[] = ['http', 'ftp', 'magnet', 'ed2k', 'thunder', 'btHash']
@@ -554,11 +555,11 @@ watch(protocolHandlers.lastError, (error) => {
         <div class="log-level-row">
           <div class="log-level-control">
             <span class="log-level-control__label">{{ t('preferences.motrix-next') }}</span>
-            <NSelect v-model:value="form.logLevel" :options="logLevelOptions" style="width: 110px" />
+            <NSelect v-model:value="form.logLevel" :options="appLogLevelOptions" style="width: 110px" />
           </div>
           <div class="log-level-control">
             <span class="log-level-control__label">{{ t('preferences.aria2-next') }}</span>
-            <NSelect v-model:value="form.aria2LogLevel" :options="logLevelOptions" style="width: 110px" />
+            <NSelect v-model:value="form.aria2LogLevel" :options="aria2LogLevelOptions" style="width: 110px" />
           </div>
         </div>
       </NFormItem>

@@ -64,7 +64,8 @@ export const TASK_STATUS = {
   SEEDING: 'seeding',
 }
 
-export const LOG_LEVELS = ['error', 'warn', 'info', 'debug']
+export const APP_LOG_LEVELS = ['error', 'warn', 'info', 'debug'] as const
+export const ARIA2_LOG_LEVELS = ['error', 'warn', 'notice', 'info', 'debug'] as const
 
 export const MAX_NUM_OF_DIRECTORIES = 5
 
@@ -353,7 +354,7 @@ export const DEFAULT_APP_CONFIG = {
   userAgent:
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',
   logLevel: 'debug',
-  aria2LogLevel: 'info',
+  aria2LogLevel: 'warn',
   cookie: '',
   runMode: '',
   engineBinPath: '',

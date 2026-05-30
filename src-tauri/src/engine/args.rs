@@ -275,11 +275,11 @@ mod tests {
             "/tmp/s.session",
             false,
             "/tmp/aria2-next.log",
-            "warn",
+            "notice",
         );
 
         assert!(args.iter().any(|a| a == "--log=/tmp/aria2-next.log"));
-        assert!(args.iter().any(|a| a == "--log-level=warn"));
+        assert!(args.iter().any(|a| a == "--log-level=notice"));
         assert!(args.iter().any(|a| a == "--quiet=true"));
         assert!(!args.iter().any(|a| a.starts_with("--log-file=")));
         assert!(!args.iter().any(|a| a.starts_with("--log-max-size=")));

@@ -1,3 +1,4 @@
+use crate::engine::{valid_aria2_log_level, DEFAULT_ARIA2_LOG_LEVEL};
 use crate::error::AppError;
 use serde_json::Value;
 use std::path::Path;
@@ -56,8 +57,8 @@ fn config_aria2_log_level(raw: Option<&Value>) -> &str {
             .and_then(|prefs| prefs.get("aria2LogLevel"))
             .and_then(Value::as_str)
     })
-    .filter(|level| matches!(*level, "error" | "warn" | "info" | "debug"))
-    .unwrap_or("info")
+    .filter(|level| valid_aria2_log_level(level))
+    .unwrap_or(DEFAULT_ARIA2_LOG_LEVEL)
 }
 
 fn redact_url_credentials(value: &str) -> String {
@@ -463,7 +464,7 @@ mod export_tests {
 
     #[test]
     fn config_aria2_log_level_reads_current_field_only() {
-        assert_eq!(config_aria2_log_level(None), "info");
+        assert_eq!(config_aria2_log_level(None), "warn");
         assert_eq!(
             config_aria2_log_level(Some(&serde_json::json!({
                 "preferences": { "aria2LogLevel": "debug" }
@@ -472,15 +473,21 @@ mod export_tests {
         );
         assert_eq!(
             config_aria2_log_level(Some(&serde_json::json!({
+                "preferences": { "aria2LogLevel": "notice" }
+            }))),
+            "notice"
+        );
+        assert_eq!(
+            config_aria2_log_level(Some(&serde_json::json!({
                 "preferences": { "aria2LogLevel": "verbose" }
             }))),
-            "info"
+            "warn"
         );
         assert_eq!(
             config_aria2_log_level(Some(&serde_json::json!({
                 "preferences": { "aria2LogsEnabled": false }
             }))),
-            "info"
+            "warn"
         );
     }
 }
