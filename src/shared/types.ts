@@ -160,7 +160,6 @@ export interface Aria2RawGlobalStat {
 /** HTTP proxy configuration for download tasks and scoped app requests. */
 export interface ProxyConfig {
   mode?: import('@shared/utils/proxyPolicy').EngineProxyMode
-  enable: boolean
   server: string
   username?: string
   password?: string

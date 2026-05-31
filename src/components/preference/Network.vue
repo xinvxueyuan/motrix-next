@@ -32,8 +32,6 @@ import {
   NInputNumber,
   NInputGroup,
   NSwitch,
-  NRadio,
-  NRadioGroup,
   NSelect,
   NButton,
   NButtonGroup,
@@ -91,7 +89,6 @@ const { detecting: detectingProxy, detect: detectProxy } = useSystemProxyDetect(
     form.value.proxy.server = info.server
     if (info.bypass) form.value.proxy.bypass = info.bypass
     form.value.proxy.mode = 'manual'
-    form.value.proxy.enable = true
     message.success(t('preferences.proxy-detected-success'))
   },
   onSocks() {
@@ -213,7 +210,7 @@ function cleanUserAgent() {
 }
 
 function handleProxySwitch(value: boolean) {
-  form.value.proxy.mode = proxySwitchValueToMode(value, form.value.proxy.mode)
+  form.value.proxy.mode = proxySwitchValueToMode(value)
 }
 
 function handleManualRestart() {
@@ -247,25 +244,12 @@ onMounted(() => {
     <NForm label-placement="left" label-align="left" label-width="260px" size="small" class="form-preference">
       <!-- Proxy -->
       <NDivider title-placement="left">{{ t('preferences.proxy') }}</NDivider>
-      <NFormItem :label="t('task.use-proxy')">
+      <NFormItem>
+        <template #label>
+          <PreferenceHintLabel :label="t('task.use-proxy')" :hint="t('preferences.proxy-request-scope-hint')" />
+        </template>
         <NSwitch :value="form.proxy.mode !== 'direct'" @update:value="handleProxySwitch" />
       </NFormItem>
-      <div class="proxy-mode-collapse" :class="{ 'proxy-mode-collapse--open': form.proxy.mode !== 'direct' }">
-        <div class="proxy-mode-collapse__inner collapse-indent">
-          <NFormItem>
-            <template #label>
-              <PreferenceHintLabel
-                :label="t('preferences.proxy-mode')"
-                :hint="t('preferences.proxy-new-task-only-hint')"
-              />
-            </template>
-            <NRadioGroup v-model:value="form.proxy.mode" name="download-proxy-mode">
-              <NRadio value="auto">{{ t('preferences.proxy-mode-auto') }}</NRadio>
-              <NRadio value="manual">{{ t('preferences.proxy-mode-manual') }}</NRadio>
-            </NRadioGroup>
-          </NFormItem>
-        </div>
-      </div>
       <div class="proxy-collapse" :class="{ 'proxy-collapse--open': form.proxy.mode === 'manual' }">
         <div class="proxy-collapse__inner collapse-indent">
           <NFormItem>
@@ -449,17 +433,14 @@ onMounted(() => {
 .form-preference :deep(.collapse-indent) {
   margin-left: 16px;
 }
-.proxy-mode-collapse,
 .proxy-collapse {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.35s cubic-bezier(0.2, 0, 0, 1);
 }
-.proxy-mode-collapse--open,
 .proxy-collapse--open {
   grid-template-rows: 1fr;
 }
-.proxy-mode-collapse__inner,
 .proxy-collapse__inner {
   overflow: hidden;
 }

@@ -94,10 +94,6 @@ export default {
   'language-changed-later': 'Αργότερα',
   'change-language': 'Αλλαγή γλώσσας',
   proxy: 'Proxy',
-  'proxy-mode': 'Λειτουργία proxy',
-  'proxy-mode-direct': 'Proxy ανενεργό',
-  'proxy-mode-auto': 'Περιβάλλον',
-  'proxy-mode-manual': 'Χειροκίνητο proxy',
   'proxy-new-task-only-hint':
     'Οι ρυθμίσεις διακομιστή μεσολάβησης ισχύουν μόνο για νέες εργασίες, οι υπάρχουσες εργασίες αλλάζουν από τις λεπτομέρειες εργασίας',
   'proxy-bypass': 'Παράκαμψη proxy',
@@ -134,7 +130,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'Μη υποστηριζόμενο πρωτόκολλο proxy. Το Aria2 Next υποστηρίζει μόνο HTTP proxy (http/https/ftp).',
-  'proxy-http-only-hint': 'Το Aria2 Next υποστηρίζει μόνο HTTP proxy. Το SOCKS proxy δεν υποστηρίζεται',
+  'proxy-http-only-hint': 'Υποστηρίζονται μόνο HTTP proxy, τα SOCKS proxy δεν υποστηρίζονται',
+  'proxy-request-scope-hint': 'Μόνο αιτήματα λήψης περνούν από proxy, όχι συνδέσεις ομότιμων BT/ED2K',
   'user-agent-string': 'Συμβολοσειρά UA',
   port: 'Θύρες ακρόασης',
   'auto-change-conflicting-ports': 'Αυτόματη αλλαγή θυρών με διένεξη',

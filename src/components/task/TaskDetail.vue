@@ -34,8 +34,8 @@ import {
   NProgress,
   NTag,
   NButton,
-  NRadioGroup,
-  NRadio,
+  NSwitch,
+  NForm,
   NInput,
   NFormItem,
   NCollapseTransition,
@@ -875,7 +875,7 @@ function handleClose() {
           </div>
 
           <div v-else-if="activeTab === 'options'" key="options" class="tab-content">
-            <div class="options-form">
+            <NForm label-placement="left" label-width="110px" class="options-form">
               <NFormItem :label="t('task.task-user-agent') + ':'">
                 <NInput
                   v-model:value="optForm.userAgent"
@@ -928,14 +928,16 @@ function handleClose() {
                   :placeholder="t('task.task-cookie-placeholder') || ''"
                 />
               </NFormItem>
-              <NFormItem :label="t('task.task-proxy-label') + ':'">
-                <div class="proxy-radio-group">
-                  <NRadioGroup v-model:value="optForm.proxyMode" :disabled="!optCanModify" name="task-proxy-mode">
-                    <NRadio value="direct">{{ t('task.proxy-mode-direct') }}</NRadio>
-                    <NRadio value="auto">{{ t('task.proxy-mode-auto') }}</NRadio>
-                    <NRadio value="manual">{{ t('task.proxy-mode-manual') }}</NRadio>
-                  </NRadioGroup>
-                  <NCollapseTransition :show="optForm.proxyMode === 'manual'">
+              <NFormItem :label="t('task.use-proxy') + ':'">
+                <NSwitch
+                  :value="optForm.proxyMode === 'manual'"
+                  :disabled="!optCanModify"
+                  @update:value="optForm.proxyMode = $event ? 'manual' : 'direct'"
+                />
+              </NFormItem>
+              <NFormItem label=" " :show-feedback="false" class="proxy-options-item">
+                <NCollapseTransition :show="optForm.proxyMode === 'manual'">
+                  <div class="proxy-radio-group">
                     <div class="custom-proxy-input">
                       <NInput
                         v-model:value="optForm.customProxy"
@@ -961,8 +963,8 @@ function handleClose() {
                         {{ t('preferences.detect-system-proxy') }}
                       </NButton>
                     </div>
-                  </NCollapseTransition>
-                </div>
+                  </div>
+                </NCollapseTransition>
               </NFormItem>
               <div v-if="optCanModify" class="options-apply-bar">
                 <NButton
@@ -975,7 +977,7 @@ function handleClose() {
                   {{ optDirty ? t('task.apply-changes') : t('task.no-changes') }}
                 </NButton>
               </div>
-            </div>
+            </NForm>
           </div>
 
           <div v-else-if="activeTab === 'status' && isED2K" key="ed2k-status" class="tab-content">
@@ -1263,8 +1265,6 @@ function handleClose() {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-top: 4px;
-  margin-left: 24px;
 }
 .custom-proxy-input .n-button {
   align-self: flex-start;

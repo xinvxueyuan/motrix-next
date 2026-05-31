@@ -131,30 +131,18 @@ vi.mock('naive-ui', async () => {
     },
   })
 
-  const NRadioGroup = defineComponent({
+  const NSwitch = defineComponent({
     props: {
-      value: { type: String, default: '' },
-      name: { type: String, default: '' },
+      value: { type: Boolean, default: false },
     },
-    setup(props, { slots }) {
+    emits: ['update:value'],
+    setup(props, { emit }) {
       return () =>
-        h(
-          'div',
-          {
-            'data-radio-group': props.name,
-            'data-value': props.value,
-          },
-          slots.default ? slots.default() : [],
-        )
-    },
-  })
-
-  const NRadio = defineComponent({
-    props: {
-      value: { type: String, default: '' },
-    },
-    setup(props, { slots }) {
-      return () => h('label', { 'data-radio-value': props.value }, slots.default ? slots.default() : [])
+        h('input', {
+          type: 'checkbox',
+          checked: props.value,
+          onChange: (e: Event) => emit('update:value', (e.target as HTMLInputElement).checked),
+        })
     },
   })
 
@@ -176,8 +164,7 @@ vi.mock('naive-ui', async () => {
     NFormItem: passthrough,
     NInput,
     NInputNumber,
-    NRadioGroup,
-    NRadio,
+    NSwitch,
     NButton,
     NSpace: passthrough,
     NGrid: passthrough,
@@ -434,7 +421,7 @@ describe('AddTask split preference sync', () => {
     const { usePreferenceStore } = await import('@/stores/preference')
     const preferenceStore = usePreferenceStore()
     preferenceStore.$patch({
-      config: { proxy: { mode: 'direct', enable: true, server: '', bypass: '', scope: ['download'] } },
+      config: { proxy: { mode: 'direct', server: '', bypass: '', scope: ['download'] } },
     })
 
     const wrapper = mountDialog()
@@ -442,13 +429,12 @@ describe('AddTask split preference sync', () => {
     await flushPromises()
     await nextTick()
 
-    expect(wrapper.find('[data-radio-group="add-task-proxy-mode"]').attributes('data-value')).toBe('direct')
+    expect((wrapper.find('input[type="checkbox"]').element as HTMLInputElement).checked).toBe(false)
 
     preferenceStore.$patch({
       config: {
         proxy: {
           mode: 'manual',
-          enable: true,
           server: 'http://127.0.0.1:7890',
           bypass: '',
           scope: ['download'],
@@ -457,7 +443,7 @@ describe('AddTask split preference sync', () => {
     })
     await nextTick()
 
-    expect(wrapper.find('[data-radio-group="add-task-proxy-mode"]').attributes('data-value')).toBe('manual')
+    expect((wrapper.find('input[type="checkbox"]').element as HTMLInputElement).checked).toBe(true)
     const proxyInput = wrapper.find('input[placeholder="http://host:port"]')
     expect((proxyInput.element as HTMLInputElement).value).toBe('http://127.0.0.1:7890')
   })

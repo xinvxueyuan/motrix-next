@@ -68,7 +68,7 @@ describe('PreferenceStore', () => {
     mockStoreData.set('preferences', {
       configVersion: CONFIG_VERSION,
       clipboard: { enable: false },
-      proxy: { mode: 'manual', enable: true, server: 'http://127.0.0.1:7890' },
+      proxy: { mode: 'manual', server: 'http://127.0.0.1:7890' },
     })
 
     await store.loadPreference()
@@ -77,7 +77,6 @@ describe('PreferenceStore', () => {
     expect(store.config.proxy).toEqual({
       ...DEFAULT_APP_CONFIG.proxy,
       mode: 'manual',
-      enable: true,
       server: 'http://127.0.0.1:7890',
     })
   })

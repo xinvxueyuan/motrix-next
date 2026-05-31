@@ -101,9 +101,10 @@ describe('buildNetworkForm', () => {
 
   // ── Proxy ───────────────────────────────────────────────────────
 
-  it('defaults proxy mode to environment inheritance', () => {
+  it('defaults proxy mode to direct', () => {
     const form = buildNetworkForm(emptyConfig)
-    expect(form.proxy.mode).toBe('auto')
+    expect(form.proxy.mode).toBe('direct')
+    expect(form.proxy.mode).toBe('direct')
   })
 
   it('defaults proxy.server to empty string', () => {
@@ -121,7 +122,6 @@ describe('buildNetworkForm', () => {
     const config = {
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://127.0.0.1:7890',
         username: 'proxy-user',
         password: 'proxy-pass',
@@ -130,7 +130,7 @@ describe('buildNetworkForm', () => {
       },
     } as AppConfig
     const form = buildNetworkForm(config)
-    expect(form.proxy.enable).toBe(true)
+    expect(form.proxy.mode).toBe('manual')
     expect(form.proxy.server).toBe('http://127.0.0.1:7890')
     expect(form.proxy.username).toBe('proxy-user')
     expect(form.proxy.password).toBe('proxy-pass')
@@ -142,7 +142,6 @@ describe('buildNetworkForm', () => {
     const config = {
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://127.0.0.1:7890',
         bypass: '',
         scope: [PROXY_SCOPES.DOWNLOAD],
@@ -283,7 +282,7 @@ describe('buildNetworkForm', () => {
 
 describe('buildNetworkSystemConfig', () => {
   const baseForm: NetworkForm = {
-    proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+    proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
     enableUpnp: true,
     autoChangeConflictingPorts: true,
     portConflictRecovery: { ...DEFAULT_APP_CONFIG.portConflictRecovery },
@@ -344,7 +343,6 @@ describe('buildNetworkSystemConfig', () => {
       ...baseForm,
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://proxy:8080',
         bypass: '*.local',
         scope: [PROXY_SCOPES.DOWNLOAD],
@@ -360,7 +358,6 @@ describe('buildNetworkSystemConfig', () => {
       ...baseForm,
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://proxy:8080',
         username: 'proxy-user',
         password: 'proxy-pass',
@@ -376,7 +373,7 @@ describe('buildNetworkSystemConfig', () => {
   it('clears proxy options when download scope is excluded', () => {
     const config = buildNetworkSystemConfig({
       ...baseForm,
-      proxy: { mode: 'manual', enable: true, server: 'http://proxy:8080', bypass: '*.local', scope: ['app'] },
+      proxy: { mode: 'manual', server: 'http://proxy:8080', bypass: '*.local', scope: ['app'] },
     })
     expect(config['proxy-mode']).toBeUndefined()
     expect(config['all-proxy']).toBe('')
@@ -388,7 +385,7 @@ describe('buildNetworkSystemConfig', () => {
   it('clears proxy options when proxy is direct', () => {
     const config = buildNetworkSystemConfig({
       ...baseForm,
-      proxy: { mode: 'direct', enable: false, server: 'http://proxy:8080', bypass: '', scope: [PROXY_SCOPES.DOWNLOAD] },
+      proxy: { mode: 'direct', server: 'http://proxy:8080', bypass: '', scope: [PROXY_SCOPES.DOWNLOAD] },
     })
     expect(config['proxy-mode']).toBeUndefined()
     expect(config['all-proxy']).toBe('')
@@ -404,12 +401,11 @@ describe('buildNetworkSystemConfig', () => {
     expect(config['no-proxy']).toBeUndefined()
   })
 
-  it('auto mode clears proxy options until a concrete proxy is resolved', () => {
+  it('normalizes legacy auto mode to direct and clears proxy options', () => {
     const config = buildNetworkSystemConfig({
       ...baseForm,
       proxy: {
-        mode: 'auto',
-        enable: false,
+        mode: 'auto' as never,
         server: 'http://127.0.0.1:7890',
         bypass: '',
         scope: [PROXY_SCOPES.DOWNLOAD],
@@ -424,7 +420,6 @@ describe('buildNetworkSystemConfig', () => {
       ...baseForm,
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://proxy:8080',
         bypass: '192.168.0.0/16,*.local',
         scope: [PROXY_SCOPES.DOWNLOAD],
@@ -439,7 +434,7 @@ describe('buildNetworkSystemConfig', () => {
 
 describe('transformNetworkForStore', () => {
   const baseForm: NetworkForm = {
-    proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+    proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
     enableUpnp: true,
     autoChangeConflictingPorts: true,
     portConflictRecovery: { ...DEFAULT_APP_CONFIG.portConflictRecovery },
@@ -472,11 +467,10 @@ describe('transformNetworkForStore', () => {
   it('preserves proxy config through transform', () => {
     const result = transformNetworkForStore({
       ...baseForm,
-      proxy: { mode: 'manual', enable: true, server: 'http://127.0.0.1:7890', bypass: '*.local', scope: ['download'] },
+      proxy: { mode: 'manual', server: 'http://127.0.0.1:7890', bypass: '*.local', scope: ['download'] },
     })
     expect(result.proxy).toEqual({
       mode: 'manual',
-      enable: true,
       server: 'http://127.0.0.1:7890',
       bypass: '*.local',
       scope: ['download'],
@@ -504,7 +498,7 @@ describe('transformNetworkForStore', () => {
 
 describe('validateNetworkForm', () => {
   const validForm: NetworkForm = {
-    proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+    proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
     enableUpnp: true,
     autoChangeConflictingPorts: true,
     portConflictRecovery: { ...DEFAULT_APP_CONFIG.portConflictRecovery },
@@ -548,7 +542,7 @@ describe('validateNetworkForm', () => {
     expect(
       validateNetworkForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: 'http://proxy.example.com:8080' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: 'http://proxy.example.com:8080' },
       }),
     ).toBeNull()
   })
@@ -557,7 +551,7 @@ describe('validateNetworkForm', () => {
     expect(
       validateNetworkForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: 'http://:invalid:url:' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: 'http://:invalid:url:' },
       }),
     ).toBe('preferences.invalid-proxy-url')
   })
@@ -566,7 +560,7 @@ describe('validateNetworkForm', () => {
     expect(
       validateNetworkForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: 'socks5://127.0.0.1:1080' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: 'socks5://127.0.0.1:1080' },
       }),
     ).toBe('preferences.proxy-unsupported-protocol')
   })
@@ -575,7 +569,7 @@ describe('validateNetworkForm', () => {
     expect(
       validateNetworkForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'direct', enable: false, server: 'socks5://127.0.0.1:1080' },
+        proxy: { ...validForm.proxy, mode: 'direct', server: 'socks5://127.0.0.1:1080' },
       }),
     ).toBeNull()
   })
@@ -584,7 +578,7 @@ describe('validateNetworkForm', () => {
     expect(
       validateNetworkForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: '' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: '' },
       }),
     ).toBeNull()
   })

@@ -106,6 +106,26 @@ pub(crate) const SUPPORTED_ENGINE_KEYS: &[&str] = &[
     "user-agent",
 ];
 
+const PROXY_CLEAR_KEYS: &[&str] = &[
+    "all-proxy",
+    "all-proxy-user",
+    "all-proxy-passwd",
+    "http-proxy",
+    "http-proxy-user",
+    "http-proxy-passwd",
+    "https-proxy",
+    "https-proxy-user",
+    "https-proxy-passwd",
+    "ftp-proxy",
+    "ftp-proxy-user",
+    "ftp-proxy-passwd",
+    "no-proxy",
+];
+
+fn preserves_empty_value(key: &str) -> bool {
+    PROXY_CLEAR_KEYS.contains(&key)
+}
+
 pub(crate) fn build_start_args(
     config: &serde_json::Value,
     conf_path: Option<&str>,
@@ -165,8 +185,9 @@ pub(crate) fn build_start_args(
                 _ => continue,
             };
 
-            // Skip empty values
-            if val_str.is_empty() {
+            // Skip empty values except proxy clear values. Empty proxy args
+            // intentionally override environment proxy variables at startup.
+            if val_str.is_empty() && !preserves_empty_value(key) {
                 continue;
             }
 
@@ -428,6 +449,41 @@ mod tests {
             "debug",
         );
         assert!(!args.iter().any(|a| a.contains("--dir=")));
+    }
+
+    #[test]
+    fn build_args_preserves_empty_proxy_values_to_override_environment() {
+        let config = json!({
+            "all-proxy": "",
+            "all-proxy-user": "",
+            "all-proxy-passwd": "",
+            "http-proxy": "",
+            "http-proxy-user": "",
+            "http-proxy-passwd": "",
+            "https-proxy": "",
+            "https-proxy-user": "",
+            "https-proxy-passwd": "",
+            "ftp-proxy": "",
+            "ftp-proxy-user": "",
+            "ftp-proxy-passwd": "",
+            "no-proxy": ""
+        });
+        let args = build_start_args(
+            &config,
+            None,
+            "/tmp/s.session",
+            false,
+            "/tmp/aria2-next.log",
+            "debug",
+        );
+
+        assert!(args.iter().any(|a| a == "--all-proxy="));
+        assert!(args.iter().any(|a| a == "--all-proxy-user="));
+        assert!(args.iter().any(|a| a == "--all-proxy-passwd="));
+        assert!(args.iter().any(|a| a == "--http-proxy="));
+        assert!(args.iter().any(|a| a == "--https-proxy="));
+        assert!(args.iter().any(|a| a == "--ftp-proxy="));
+        assert!(args.iter().any(|a| a == "--no-proxy="));
     }
 
     #[test]

@@ -55,7 +55,7 @@ const mockTaskStoreForHook = {
 const mockPreferenceStore = {
   config: {
     newTaskShowDownloading: true,
-    proxy: { mode: 'direct', enable: false, server: '', scope: [], bypass: '' },
+    proxy: { mode: 'direct', server: '', scope: [], bypass: '' },
     fileCategoryEnabled: false,
     fileCategories: [],
   },
@@ -250,15 +250,6 @@ describe('buildEngineOptions', () => {
     expect(opts['all-proxy']).toBe('')
   })
 
-  it('clears proxy options when proxyMode is auto', () => {
-    const opts = buildEngineOptions({
-      ...baseForm,
-      proxyMode: 'auto',
-    })
-    expect(opts['proxy-mode']).toBeUndefined()
-    expect(opts['all-proxy']).toBe('')
-  })
-
   it('sets manual proxy options when proxyMode is manual with valid address', () => {
     const opts = buildEngineOptions({
       ...baseForm,
@@ -301,7 +292,6 @@ describe('buildEngineOptions', () => {
       customProxy: '',
       appProxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://127.0.0.1:7890',
         username: 'global-user',
         password: 'global-pass',

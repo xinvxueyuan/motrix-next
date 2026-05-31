@@ -43,7 +43,6 @@ export interface AdvancedForm {
   [key: string]: unknown
   proxy: {
     mode: EngineProxyMode
-    enable: boolean
     server: string
     username?: string
     password?: string
@@ -123,7 +122,6 @@ export function buildAdvancedForm(config: AppConfig): {
     form: {
       proxy: {
         mode: normalizeProxyMode(proxy.mode),
-        enable: proxy.enable ?? D.proxy.enable,
         server: proxy.server ?? D.proxy.server,
         username: proxy.username ?? D.proxy.username,
         password: proxy.password ?? D.proxy.password,
@@ -204,10 +202,6 @@ export function transformAdvancedForStore(f: AdvancedForm): Record<string, unkno
   } = f
   return {
     ...rest,
-    proxy: {
-      ...f.proxy,
-      enable: f.proxy.mode === 'manual',
-    },
     btTracker: convertLineToComma(f.btTracker),
     clipboard: {
       enable: clipboardEnable,

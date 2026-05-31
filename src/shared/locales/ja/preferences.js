@@ -92,10 +92,6 @@ export default {
   'language-changed-later': '後で',
   'change-language': '言語を変更',
   proxy: 'プロキシ',
-  'proxy-mode': 'プロキシモード',
-  'proxy-mode-direct': 'プロキシ無効',
-  'proxy-mode-auto': '環境',
-  'proxy-mode-manual': '手動プロキシ',
   'proxy-new-task-only-hint':
     'プロキシ設定は新しいタスクにのみ適用され、既存のタスクはタスク詳細で個別に変更する必要があります',
   'proxy-bypass': 'プロキシ除外',
@@ -132,7 +128,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'サポートされていないプロキシプロトコルです。Aria2 NextはHTTPプロキシのみ対応しています（http/https/ftp）。',
-  'proxy-http-only-hint': 'Aria2 NextはHTTPプロキシのみ対応しています。SOCKSプロキシには対応していません',
+  'proxy-http-only-hint': 'HTTP プロキシのみ対応、SOCKS プロキシは非対応',
+  'proxy-request-scope-hint': 'ダウンロードリクエストのみプロキシされ、BT/ED2K ピア接続はプロキシされません',
   'user-agent-string': 'UA 文字列',
   port: '待受ポート',
   'auto-change-conflicting-ports': '競合するポートを自動切り替え',
@@ -367,8 +364,7 @@ export default {
   timeout: '転送タイムアウト',
   'file-allocation': 'ファイル事前割り当て',
   'async-dns': '非同期 DNS',
-  'async-dns-hint':
-    '有効にすると DNS 解決の性能が向上する場合がありますが、ダウンロードが不安定になることもあります',
+  'async-dns-hint': '有効にすると DNS 解決の性能が向上する場合がありますが、ダウンロードが不安定になることもあります',
   'startup-behavior': '起動',
   'tray-and-dock': 'トレイと Dock',
   'unit-seconds': '秒',

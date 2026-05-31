@@ -92,10 +92,6 @@ export default {
   'language-changed-later': 'बाद में',
   'change-language': 'भाषा बदलें',
   proxy: 'Proxy',
-  'proxy-mode': 'Proxy मोड',
-  'proxy-mode-direct': 'Proxy बंद',
-  'proxy-mode-auto': 'Environment',
-  'proxy-mode-manual': 'Manual proxy',
   'proxy-new-task-only-hint':
     'Proxy settings केवल नए कार्यों पर लागू होती हैं, मौजूदा कार्यों को task details में बदलना होगा।',
   'proxy-bypass': 'Proxy bypass',
@@ -132,7 +128,8 @@ export default {
   'invalid-proxy-url': 'Proxy URL format अमान्य है',
   'proxy-unsupported-protocol':
     'Unsupported proxy protocol. Aria2 Next केवल HTTP proxies (http/https/ftp) support करता है।',
-  'proxy-http-only-hint': 'Aria2 Next केवल HTTP proxy support करता है। SOCKS proxy support नहीं है।',
+  'proxy-http-only-hint': 'केवल HTTP proxy समर्थित हैं, SOCKS proxy समर्थित नहीं हैं',
+  'proxy-request-scope-hint': 'केवल download requests proxy होती हैं, BT/ED2K peer connections proxy नहीं होती हैं',
   'user-agent-string': 'UA string',
   port: 'Listen ports',
   'auto-change-conflicting-ports': 'Conflicting ports अपने आप बदलें',
@@ -364,8 +361,7 @@ export default {
   timeout: 'Transfer timeout',
   'file-allocation': 'File pre-allocation',
   'async-dns': 'Async DNS',
-  'async-dns-hint':
-    'चालू करने पर DNS रिज़ॉल्यूशन प्रदर्शन बेहतर हो सकता है, लेकिन डाउनलोड अस्थिर भी हो सकते हैं',
+  'async-dns-hint': 'चालू करने पर DNS रिज़ॉल्यूशन प्रदर्शन बेहतर हो सकता है, लेकिन डाउनलोड अस्थिर भी हो सकते हैं',
   'startup-behavior': 'शुरुआत',
   'tray-and-dock': 'Tray और Dock',
   'unit-seconds': 'सेकंड',

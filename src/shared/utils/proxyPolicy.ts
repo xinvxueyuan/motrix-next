@@ -3,7 +3,7 @@ import type { Aria2EngineOptions, ProxyConfig } from '@shared/types'
 import { isValidAria2ProxyUrl } from '@shared/utils/aria2Proxy'
 import { hasProxyScope } from '@shared/utils/proxyUrl'
 
-export const ENGINE_PROXY_MODES = ['direct', 'auto', 'manual'] as const
+export const ENGINE_PROXY_MODES = ['direct', 'manual'] as const
 export type EngineProxyMode = (typeof ENGINE_PROXY_MODES)[number]
 
 export type TaskProxyMode = EngineProxyMode
@@ -16,9 +16,8 @@ export function isProxyModeEnabled(mode: EngineProxyMode): boolean {
   return mode !== 'direct'
 }
 
-export function proxySwitchValueToMode(enabled: boolean, currentMode: EngineProxyMode): EngineProxyMode {
-  if (!enabled) return 'direct'
-  return currentMode === 'direct' ? 'auto' : currentMode
+export function proxySwitchValueToMode(enabled: boolean): EngineProxyMode {
+  return enabled ? 'manual' : 'direct'
 }
 
 function hasDownloadScope(proxy: Pick<ProxyConfig, 'scope'>): boolean {

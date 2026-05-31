@@ -92,10 +92,6 @@ export default {
   'language-changed-later': 'Later',
   'change-language': 'Taal wijzigen',
   proxy: 'Proxy',
-  'proxy-mode': 'Proxymodus',
-  'proxy-mode-direct': 'Proxy uit',
-  'proxy-mode-auto': 'Omgeving',
-  'proxy-mode-manual': 'Handmatige proxy',
   'proxy-new-task-only-hint':
     'Proxy-instellingen gelden alleen voor nieuwe taken, bestaande taken moeten in de taakdetails worden aangepast',
   'proxy-bypass': 'Proxy-uitzondering',
@@ -132,7 +128,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'Niet-ondersteund proxyprotocol. Aria2 Next ondersteunt alleen HTTP-proxy (http/https/ftp).',
-  'proxy-http-only-hint': 'Aria2 Next ondersteunt alleen HTTP-proxy. SOCKS-proxy wordt niet ondersteund',
+  'proxy-http-only-hint': 'Alleen HTTP-proxys worden ondersteund, SOCKS-proxys worden niet ondersteund',
+  'proxy-request-scope-hint': 'Alleen downloadverzoeken gaan via de proxy, BT/ED2K-peerverbindingen niet',
   'user-agent-string': 'UA-tekenreeks',
   port: 'Luisterpoorten',
   'auto-change-conflicting-ports': 'Conflicterende poorten automatisch wisselen',

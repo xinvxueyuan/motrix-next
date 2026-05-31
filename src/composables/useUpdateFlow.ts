@@ -18,6 +18,7 @@ export interface DownloadUpdateResult {
 
 export interface UpdateProxyConfig {
   enable?: boolean
+  mode?: string
   server?: string
   username?: string
   password?: string
@@ -92,7 +93,7 @@ export function bytesToMB(bytes: number): string {
 
 /** Returns the proxy server URL if proxy is enabled for app updates. */
 export function getUpdateProxy(proxyConfig: UpdateProxyConfig | undefined): string | null {
-  if (!proxyConfig?.enable || !proxyConfig.server) return null
+  if (proxyConfig?.mode !== 'manual' || !proxyConfig.server) return null
   const scope = proxyConfig.scope || []
   if (!scope.includes('update-app')) return null
   return buildProxyUrlWithCredentials(proxyConfig)

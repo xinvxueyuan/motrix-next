@@ -92,10 +92,6 @@ export default {
   'language-changed-later': 'Daha sonra',
   'change-language': 'Dili değiştir',
   proxy: 'Proxy',
-  'proxy-mode': 'Proxy modu',
-  'proxy-mode-direct': 'Proxy kapalı',
-  'proxy-mode-auto': "Ortam proxy'sini devral",
-  'proxy-mode-manual': 'Manuel proxy',
   'proxy-new-task-only-hint':
     'Proxy ayarları yalnızca yeni görevlere uygulanır, mevcut görevler görev ayrıntılarından değiştirilmelidir',
   'proxy-bypass': 'Proxy istisnası',
@@ -132,7 +128,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'Desteklenmeyen proxy protokolü. Aria2 Next yalnızca HTTP proxy destekler (http/https/ftp).',
-  'proxy-http-only-hint': 'Aria2 Next yalnızca HTTP proxy destekler. SOCKS proxy desteklenmez',
+  'proxy-http-only-hint': 'Yalnızca HTTP proxy desteklenir, SOCKS proxy desteklenmez',
+  'proxy-request-scope-hint': 'Yalnızca indirme istekleri proxy üzerinden geçer, BT/ED2K eş bağlantıları geçmez',
   'user-agent-string': 'UA dizesi',
   port: 'Dinleme portları',
   'auto-change-conflicting-ports': 'Çakışan portları otomatik değiştir',

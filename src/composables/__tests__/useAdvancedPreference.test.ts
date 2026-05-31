@@ -167,7 +167,8 @@ describe('buildAdvancedForm', () => {
 
   it('returns defaults for empty config', () => {
     const { form } = buildAdvancedForm(emptyConfig)
-    expect(form.proxy.mode).toBe('auto')
+    expect(form.proxy.mode).toBe('direct')
+    expect(form.proxy.mode).toBe('direct')
     expect(form.proxy.server).toBe('')
     // Default scope must include ALL scopes so proxy works on first enable
     // (legacy Motrix behavior — scope defaults to PROXY_SCOPE_OPTIONS)
@@ -205,14 +206,13 @@ describe('buildAdvancedForm', () => {
     const config = {
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'socks5://127.0.0.1:1080',
         bypass: '*.local',
         scope: ['download'],
       },
     } as AppConfig
     const { form } = buildAdvancedForm(config)
-    expect(form.proxy.enable).toBe(true)
+    expect(form.proxy.mode).toBe('manual')
     expect(form.proxy.server).toBe('socks5://127.0.0.1:1080')
     expect(form.proxy.bypass).toBe('*.local')
     expect(form.proxy.scope).toEqual(['download'])
@@ -243,7 +243,7 @@ describe('buildAdvancedForm', () => {
 
 describe('buildAdvancedSystemConfig', () => {
   const baseForm: AdvancedForm = {
-    proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+    proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
     trackerSource: [],
     customTrackerUrls: [],
     btTracker: 'udp://t1.org:6969\nudp://t2.org:6969',
@@ -298,7 +298,6 @@ describe('buildAdvancedSystemConfig', () => {
       ...baseForm,
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://proxy:8080',
         bypass: '*.local',
         scope: [PROXY_SCOPES.DOWNLOAD],
@@ -313,7 +312,7 @@ describe('buildAdvancedSystemConfig', () => {
   it('clears proxy options when download scope is excluded', () => {
     const noProxyForm: AdvancedForm = {
       ...baseForm,
-      proxy: { mode: 'manual', enable: true, server: 'http://proxy:8080', bypass: '*.local', scope: ['app'] },
+      proxy: { mode: 'manual', server: 'http://proxy:8080', bypass: '*.local', scope: ['app'] },
     }
     const config = buildAdvancedSystemConfig(noProxyForm)
     expect(config['proxy-mode']).toBeUndefined()
@@ -324,7 +323,7 @@ describe('buildAdvancedSystemConfig', () => {
   it('clears proxy options when proxy is direct', () => {
     const disabledForm: AdvancedForm = {
       ...baseForm,
-      proxy: { mode: 'direct', enable: false, server: 'http://proxy:8080', bypass: '', scope: [PROXY_SCOPES.DOWNLOAD] },
+      proxy: { mode: 'direct', server: 'http://proxy:8080', bypass: '', scope: [PROXY_SCOPES.DOWNLOAD] },
     }
     const config = buildAdvancedSystemConfig(disabledForm)
     expect(config['proxy-mode']).toBeUndefined()
@@ -337,7 +336,7 @@ describe('buildAdvancedSystemConfig', () => {
 describe('transformAdvancedForStore', () => {
   it('converts trackers back to comma format', () => {
     const form: AdvancedForm = {
-      proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+      proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
       trackerSource: [],
       customTrackerUrls: [],
       btTracker: 'udp://a\nudp://b',
@@ -376,7 +375,7 @@ describe('transformAdvancedForStore', () => {
 
   it('persists ED2K clipboard toggle', () => {
     const form: AdvancedForm = {
-      proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+      proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
       trackerSource: [],
       customTrackerUrls: [],
       btTracker: '',
@@ -417,7 +416,7 @@ describe('transformAdvancedForStore', () => {
 
   it('preserves port numbers as numbers (not strings)', () => {
     const form: AdvancedForm = {
-      proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+      proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
       trackerSource: [],
       customTrackerUrls: [],
       btTracker: '',
@@ -560,7 +559,7 @@ describe('isValidAria2ProxyUrl', () => {
 
 describe('validateAdvancedForm', () => {
   const validForm: AdvancedForm = {
-    proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+    proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
     trackerSource: [],
     customTrackerUrls: [],
     btTracker: '',
@@ -606,7 +605,7 @@ describe('validateAdvancedForm', () => {
     expect(
       validateAdvancedForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: 'http://proxy.example.com:8080' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: 'http://proxy.example.com:8080' },
       }),
     ).toBeNull()
   })
@@ -615,7 +614,7 @@ describe('validateAdvancedForm', () => {
     expect(
       validateAdvancedForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: 'http://:invalid:url:' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: 'http://:invalid:url:' },
       }),
     ).toBe('preferences.invalid-proxy-url')
   })
@@ -624,7 +623,7 @@ describe('validateAdvancedForm', () => {
     expect(
       validateAdvancedForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: 'socks5://127.0.0.1:1080' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: 'socks5://127.0.0.1:1080' },
       }),
     ).toBe('preferences.proxy-unsupported-protocol')
   })
@@ -633,7 +632,7 @@ describe('validateAdvancedForm', () => {
     expect(
       validateAdvancedForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: 'socks4://127.0.0.1:1080' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: 'socks4://127.0.0.1:1080' },
       }),
     ).toBe('preferences.proxy-unsupported-protocol')
   })
@@ -642,7 +641,7 @@ describe('validateAdvancedForm', () => {
     expect(
       validateAdvancedForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'direct', enable: false, server: 'socks5://127.0.0.1:1080' },
+        proxy: { ...validForm.proxy, mode: 'direct', server: 'socks5://127.0.0.1:1080' },
       }),
     ).toBeNull()
   })
@@ -651,7 +650,7 @@ describe('validateAdvancedForm', () => {
     expect(
       validateAdvancedForm({
         ...validForm,
-        proxy: { ...validForm.proxy, mode: 'manual', enable: true, server: '' },
+        proxy: { ...validForm.proxy, mode: 'manual', server: '' },
       }),
     ).toBeNull()
   })
@@ -699,7 +698,6 @@ describe('proxy configuration invariants', () => {
     const config = {
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://127.0.0.1:7890',
         bypass: '',
         scope: [PROXY_SCOPES.DOWNLOAD],
@@ -727,7 +725,6 @@ describe('proxy configuration invariants', () => {
     const form: AdvancedForm = {
       proxy: {
         mode: 'direct',
-        enable: false,
         server: 'http://127.0.0.1:7890',
         bypass: '',
         scope: [...PROXY_SCOPE_OPTIONS],
@@ -774,7 +771,6 @@ describe('proxy configuration invariants', () => {
     const form: AdvancedForm = {
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://127.0.0.1:7890',
         bypass: '',
         scope: [PROXY_SCOPES.UPDATE_APP, PROXY_SCOPES.UPDATE_TRACKERS],
@@ -820,7 +816,6 @@ describe('proxy configuration invariants', () => {
     const form: AdvancedForm = {
       proxy: {
         mode: 'manual',
-        enable: true,
         server: 'http://proxy:8080',
         bypass: '192.168.0.0/16,*.local',
         scope: [PROXY_SCOPES.DOWNLOAD],
@@ -888,7 +883,7 @@ describe('buildAdvancedForm — hardwareRendering', () => {
 describe('transformAdvancedForStore — hardwareRendering', () => {
   it('preserves hardwareRendering in store output', () => {
     const form: AdvancedForm = {
-      proxy: { mode: 'direct', enable: false, server: '', bypass: '', scope: [] },
+      proxy: { mode: 'direct', server: '', bypass: '', scope: [] },
       trackerSource: [],
       customTrackerUrls: [],
       btTracker: '',

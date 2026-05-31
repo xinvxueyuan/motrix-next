@@ -46,7 +46,6 @@ function makeTask(overrides: Partial<Aria2Task> = {}): Aria2Task {
 function makeProxy(overrides: Partial<ProxyConfig> = {}): ProxyConfig {
   return {
     mode: 'manual',
-    enable: true,
     server: 'http://127.0.0.1:7890',
     scope: ['download', 'update-app'],
     ...overrides,

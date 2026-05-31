@@ -92,10 +92,6 @@ export default {
   'language-changed-later': 'Позже',
   'change-language': 'Сменить язык',
   proxy: 'Прокси',
-  'proxy-mode': 'Режим прокси',
-  'proxy-mode-direct': 'Прокси выключен',
-  'proxy-mode-auto': 'Окружение',
-  'proxy-mode-manual': 'Ручной прокси',
   'proxy-new-task-only-hint':
     'Настройки прокси применяются только к новым задачам, существующие задачи нужно менять в деталях задачи',
   'proxy-bypass': 'Исключения прокси',
@@ -132,7 +128,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'Неподдерживаемый протокол прокси. Aria2 Next поддерживает только HTTP-прокси (http/https/ftp).',
-  'proxy-http-only-hint': 'Aria2 Next поддерживает только HTTP-прокси. SOCKS-прокси не поддерживается',
+  'proxy-http-only-hint': 'Поддерживаются только HTTP-прокси, SOCKS-прокси не поддерживаются',
+  'proxy-request-scope-hint': 'Через прокси идут только запросы загрузки, peer-соединения BT/ED2K не проксируются',
   'user-agent-string': 'Строка UA',
   port: 'Порты прослушивания',
   'auto-change-conflicting-ports': 'Автоматически переключать конфликтующие порты',

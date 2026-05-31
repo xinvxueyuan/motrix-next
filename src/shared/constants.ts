@@ -341,8 +341,7 @@ export const DEFAULT_APP_CONFIG = {
   ed2kShareFiles: [] as string[],
   ed2kSearchTimeout: 20,
   proxy: {
-    mode: 'auto' as const,
-    enable: true,
+    mode: 'direct' as const,
     server: '',
     username: '',
     password: '',

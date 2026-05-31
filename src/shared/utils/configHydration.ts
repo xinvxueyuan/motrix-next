@@ -80,7 +80,6 @@ function normalizeProxy(value: unknown, repairs: string[]): ProxyConfig {
   return {
     ...merged,
     mode,
-    enable: typeof merged.enable === 'boolean' ? merged.enable : defaults.enable,
     server: typeof merged.server === 'string' ? merged.server : defaults.server,
     username: typeof merged.username === 'string' ? merged.username : defaults.username,
     password: typeof merged.password === 'string' ? merged.password : defaults.password,

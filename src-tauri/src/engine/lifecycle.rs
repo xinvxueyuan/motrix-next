@@ -15,6 +15,22 @@ static BT_PORT_RECOVERY_IN_FLIGHT: std::sync::atomic::AtomicBool =
 
 const ENGINE_SIDECAR_NAME: &str = "motrix-next-engine";
 const DEFAULT_RPC_PORT_STR: &str = "29100";
+const PROXY_ENV_VARS: &[&str] = &[
+    "http_proxy",
+    "https_proxy",
+    "ftp_proxy",
+    "all_proxy",
+    "no_proxy",
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "FTP_PROXY",
+    "ALL_PROXY",
+    "NO_PROXY",
+];
+
+fn sanitized_engine_proxy_env() -> Vec<(&'static str, &'static str)> {
+    PROXY_ENV_VARS.iter().map(|key| (*key, "")).collect()
+}
 
 fn read_aria2_log_level(app: &tauri::AppHandle) -> String {
     let Some(store) = app.store("config.json").ok() else {
@@ -200,6 +216,7 @@ pub fn start_engine(app: &tauri::AppHandle, config: &serde_json::Value) -> Resul
         .shell()
         .sidecar(ENGINE_SIDECAR_NAME)
         .map_err(|e| format!("Failed to create sidecar: {}", e))?
+        .envs(sanitized_engine_proxy_env())
         .args(&args);
 
     let (mut rx, child) = sidecar
@@ -424,6 +441,7 @@ pub fn restart_engine(app: &tauri::AppHandle, _config: &serde_json::Value) -> Re
         .shell()
         .sidecar(ENGINE_SIDECAR_NAME)
         .map_err(|e| format!("Failed to create sidecar: {}", e))?
+        .envs(sanitized_engine_proxy_env())
         .args(&args);
 
     let (mut rx, child) = sidecar
@@ -512,4 +530,20 @@ pub fn restart_engine(app: &tauri::AppHandle, _config: &serde_json::Value) -> Re
     });
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sanitized_engine_proxy_env_clears_lowercase_and_uppercase_proxy_vars() {
+        let env = sanitized_engine_proxy_env();
+
+        for key in PROXY_ENV_VARS {
+            assert!(env
+                .iter()
+                .any(|(name, value)| name == key && value.is_empty()));
+        }
+    }
 }

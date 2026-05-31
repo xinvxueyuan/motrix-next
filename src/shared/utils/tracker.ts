@@ -28,8 +28,8 @@ export interface FetchTrackerSourcesResult {
  * includes UPDATE_TRACKERS; otherwise returns `null`.
  */
 export function computeTrackerProxyServer(proxyConfig: Partial<ProxyConfig>): string | null {
-  const { enable, server, scope = [] as string[] } = proxyConfig
-  return enable && server && scope.includes(PROXY_SCOPES.UPDATE_TRACKERS)
+  const { mode, server, scope = [] as string[] } = proxyConfig
+  return mode === 'manual' && server && scope.includes(PROXY_SCOPES.UPDATE_TRACKERS)
     ? buildProxyUrlWithCredentials(proxyConfig)
     : null
 }

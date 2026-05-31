@@ -10,7 +10,7 @@ import { DEFAULT_APP_CONFIG, MAX_NUM_OF_DIRECTORIES } from '@shared/constants'
 import { logger } from '@shared/logger'
 import { type MigrationResult } from '@shared/utils/configMigration'
 import { hydrateAppConfig } from '@shared/utils/configHydration'
-import type { AppConfig, ProxyConfig } from '@shared/types'
+import type { AppConfig } from '@shared/types'
 
 const STORE_KEY = 'preferences'
 
@@ -242,7 +242,7 @@ export const usePreferenceStore = defineStore('preference', () => {
   }
 
   async function fetchBtTracker(trackerSource: string[] = []) {
-    const proxy = config.value.proxy || ({ enable: false } as ProxyConfig)
+    const proxy = config.value.proxy || DEFAULT_APP_CONFIG.proxy
     return fetchBtTrackerFromSource(trackerSource, proxy)
   }
 

@@ -92,10 +92,6 @@ export default {
   'language-changed-later': 'بعداً',
   'change-language': 'تغییر زبان',
   proxy: 'پروکسی',
-  'proxy-mode': 'حالت پروکسی',
-  'proxy-mode-direct': 'پروکسی خاموش',
-  'proxy-mode-auto': 'محیط',
-  'proxy-mode-manual': 'پروکسی دستی',
   'proxy-new-task-only-hint':
     'تنظیمات پراکسی فقط برای وظایف جدید اعمال می‌شود، وظایف موجود باید از جزئیات وظیفه تغییر کنند',
   'proxy-bypass': 'دور زدن پروکسی',
@@ -132,7 +128,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'پروتکل پروکسی پشتیبانی نمی‌شود. Aria2 Next فقط از پروکسی HTTP پشتیبانی می‌کند (http/https/ftp).',
-  'proxy-http-only-hint': 'Aria2 Next فقط از پروکسی HTTP پشتیبانی می‌کند. پروکسی SOCKS پشتیبانی نمی‌شود',
+  'proxy-http-only-hint': 'فقط پروکسی‌های HTTP پشتیبانی می‌شوند، پروکسی‌های SOCKS پشتیبانی نمی‌شوند',
+  'proxy-request-scope-hint': 'فقط درخواست‌های دانلود از پروکسی عبور می‌کنند، اتصال‌های همتای BT/ED2K پروکسی نمی‌شوند',
   'user-agent-string': 'رشته UA',
   port: 'پورت‌های شنود',
   'auto-change-conflicting-ports': 'تغییر خودکار پورت‌های دارای تداخل',
@@ -365,8 +362,7 @@ export default {
   timeout: 'مهلت انتقال',
   'file-allocation': 'پیش‌تخصیص فایل',
   'async-dns': 'DNS ناهمگام',
-  'async-dns-hint':
-    'پس از فعال شدن ممکن است کارایی تحلیل DNS را بهتر کند، اما ممکن است دانلودها را ناپایدار کند',
+  'async-dns-hint': 'پس از فعال شدن ممکن است کارایی تحلیل DNS را بهتر کند، اما ممکن است دانلودها را ناپایدار کند',
   'startup-behavior': 'راه‌اندازی',
   'tray-and-dock': 'سینی و Dock',
   'unit-seconds': 'ثانیه',

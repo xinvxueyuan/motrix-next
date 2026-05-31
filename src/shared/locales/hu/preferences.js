@@ -93,10 +93,6 @@ export default {
   'language-changed-later': 'Később',
   'change-language': 'Nyelv váltása',
   proxy: 'Proxy',
-  'proxy-mode': 'Proxy mód',
-  'proxy-mode-direct': 'Proxy kikapcsolva',
-  'proxy-mode-auto': 'Környezet',
-  'proxy-mode-manual': 'Kézi proxy',
   'proxy-new-task-only-hint':
     'A proxybeállítások csak az új feladatokra érvényesek, a meglévő feladatokat a feladat részleteiben kell módosítani',
   'proxy-bypass': 'Proxy kivétel',
@@ -133,7 +129,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'Nem támogatott proxy protokoll. Az Aria2 Next csak HTTP proxyt támogat (http/https/ftp).',
-  'proxy-http-only-hint': 'Az Aria2 Next csak HTTP proxyt támogat. A SOCKS proxy nem támogatott',
+  'proxy-http-only-hint': 'Csak HTTP proxy támogatott, a SOCKS proxy nem támogatott',
+  'proxy-request-scope-hint': 'Csak a letöltési kérések mennek proxyn keresztül, a BT/ED2K peer kapcsolatok nem',
   'user-agent-string': 'UA karakterlánc',
   port: 'Figyelő portok',
   'auto-change-conflicting-ports': 'Ütköző portok automatikus váltása',
@@ -367,8 +364,7 @@ export default {
   timeout: 'Átviteli időtúllépés',
   'file-allocation': 'Fájl előfoglalás',
   'async-dns': 'Aszinkron DNS',
-  'async-dns-hint':
-    'Bekapcsolva javíthatja a DNS-feloldás teljesítményét, de instabillá teheti a letöltéseket',
+  'async-dns-hint': 'Bekapcsolva javíthatja a DNS-feloldás teljesítményét, de instabillá teheti a letöltéseket',
   'startup-behavior': 'Indítás',
   'tray-and-dock': 'Tálca és Dock',
   'unit-seconds': 'mp',

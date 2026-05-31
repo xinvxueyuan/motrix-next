@@ -92,10 +92,6 @@ export default {
   'language-changed-later': 'Nanti',
   'change-language': 'Ubah bahasa',
   proxy: 'Proxy',
-  'proxy-mode': 'Mode proxy',
-  'proxy-mode-direct': 'Proxy mati',
-  'proxy-mode-auto': 'Lingkungan',
-  'proxy-mode-manual': 'Proxy manual',
   'proxy-new-task-only-hint':
     'Pengaturan proxy hanya berlaku untuk tugas baru, tugas yang sudah ada harus diubah di detail tugas',
   'proxy-bypass': 'Lewati proxy',
@@ -132,7 +128,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'Protokol proxy tidak didukung. Aria2 Next hanya mendukung proxy HTTP (http/https/ftp).',
-  'proxy-http-only-hint': 'Aria2 Next hanya mendukung proxy HTTP. Proxy SOCKS tidak didukung',
+  'proxy-http-only-hint': 'Hanya proxy HTTP yang didukung, proxy SOCKS tidak didukung',
+  'proxy-request-scope-hint': 'Hanya permintaan unduhan yang diproksikan, koneksi peer BT/ED2K tidak diproksikan',
   'user-agent-string': 'String UA',
   port: 'Port pendengar',
   'auto-change-conflicting-ports': 'Alihkan port yang bentrok otomatis',

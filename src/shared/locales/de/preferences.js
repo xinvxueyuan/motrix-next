@@ -92,10 +92,6 @@ export default {
   'language-changed-later': 'Später',
   'change-language': 'Sprache ändern',
   proxy: 'Proxy',
-  'proxy-mode': 'Proxy-Modus',
-  'proxy-mode-direct': 'Proxy aus',
-  'proxy-mode-auto': 'Umgebung',
-  'proxy-mode-manual': 'Manueller Proxy',
   'proxy-new-task-only-hint':
     'Proxy-Einstellungen gelten nur für neue Aufgaben, bestehende Aufgaben müssen in den Aufgabendetails geändert werden',
   'proxy-bypass': 'Proxy-Ausnahmen',
@@ -132,7 +128,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'Nicht unterstütztes Proxy-Protokoll. Aria2 Next unterstützt nur HTTP-Proxy (http/https/ftp).',
-  'proxy-http-only-hint': 'Aria2 Next unterstützt nur HTTP-Proxy. SOCKS-Proxy wird nicht unterstützt',
+  'proxy-http-only-hint': 'Nur HTTP-Proxys werden unterstützt, SOCKS-Proxys werden nicht unterstützt',
+  'proxy-request-scope-hint': 'Nur Download-Anfragen werden über den Proxy geleitet, BT/ED2K-Peer-Verbindungen nicht',
   'user-agent-string': 'UA-Zeichenkette',
   port: 'Ports',
   'auto-change-conflicting-ports': 'Belegte Ports automatisch wechseln',
@@ -370,8 +367,7 @@ export default {
   timeout: 'Übertragungs-Zeitlimit',
   'file-allocation': 'Datei-Vorabzuweisung',
   'async-dns': 'Asynchrones DNS',
-  'async-dns-hint':
-    'Kann nach dem Aktivieren die DNS-Auflösung beschleunigen, Downloads aber instabil machen',
+  'async-dns-hint': 'Kann nach dem Aktivieren die DNS-Auflösung beschleunigen, Downloads aber instabil machen',
   'startup-behavior': 'Autostart',
   'tray-and-dock': 'Taskleiste & Dock',
   'unit-seconds': 'Sek',

@@ -26,18 +26,17 @@ describe('hydrateAppConfig', () => {
   it('deep-hydrates fixed nested objects without overwriting saved subfields', () => {
     const result = hydrateAppConfig({
       configVersion: CONFIG_VERSION,
-      proxy: { mode: 'manual', enable: true, server: 'http://127.0.0.1:7890' } as AppConfig['proxy'],
-      clipboard: { enable: false, http: false } as AppConfig['clipboard'],
+      proxy: { mode: 'manual', server: 'http://127.0.0.1:7890' } as AppConfig['proxy'],
+      clipboard: { http: false } as AppConfig['clipboard'],
       portConflictRecovery: { enabled: false, rangeStart: 29050 } as AppConfig['portConflictRecovery'],
     })
 
     expect(result.config.proxy).toEqual({
       ...DEFAULT_APP_CONFIG.proxy,
       mode: 'manual',
-      enable: true,
       server: 'http://127.0.0.1:7890',
     })
-    expect(result.config.clipboard).toEqual({ ...DEFAULT_APP_CONFIG.clipboard, enable: false, http: false })
+    expect(result.config.clipboard).toEqual({ ...DEFAULT_APP_CONFIG.clipboard, http: false })
     expect(result.config.portConflictRecovery).toEqual({
       ...DEFAULT_APP_CONFIG.portConflictRecovery,
       enabled: false,
@@ -115,6 +114,16 @@ describe('hydrateAppConfig', () => {
     expect(result.config.portConflictRecovery.rangeEnd).toBe(DEFAULT_APP_CONFIG.portConflictRecovery.rangeEnd)
     expect(result.config.portConflictRecovery.bt).toBe(false)
     expect(result.repairs).toEqual(expect.arrayContaining(['proxy.mode', 'portConflictRecovery.range']))
+  })
+
+  it('repairs legacy auto proxy mode to disabled direct mode', () => {
+    const result = hydrateAppConfig({
+      configVersion: CONFIG_VERSION,
+      proxy: { ...DEFAULT_APP_CONFIG.proxy, mode: 'auto' as never, server: 'http://127.0.0.1:7890' },
+    })
+
+    expect(result.config.proxy.mode).toBe('direct')
+    expect(result.repairs).toContain('proxy.mode')
   })
 
   it('preserves secret generation semantics', () => {

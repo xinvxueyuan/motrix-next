@@ -27,7 +27,6 @@ export interface NetworkForm {
   [key: string]: unknown
   proxy: {
     mode: EngineProxyMode
-    enable: boolean
     server: string
     username?: string
     password?: string
@@ -73,7 +72,6 @@ export function buildNetworkForm(config: AppConfig): NetworkForm {
   return {
     proxy: {
       mode: normalizeProxyMode(proxy.mode),
-      enable: proxy.enable ?? D.proxy.enable,
       server: proxy.server ?? D.proxy.server,
       username: proxy.username ?? D.proxy.username,
       password: proxy.password ?? D.proxy.password,
@@ -117,10 +115,6 @@ export function buildNetworkSystemConfig(f: NetworkForm): Record<string, string>
 export function transformNetworkForStore(f: NetworkForm): Partial<AppConfig> {
   return {
     ...f,
-    proxy: {
-      ...f.proxy,
-      enable: f.proxy.mode === 'manual',
-    },
     autoChangeConflictingPorts: f.portConflictRecovery.enabled,
   }
 }

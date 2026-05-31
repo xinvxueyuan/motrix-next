@@ -195,25 +195,25 @@ describe('getUpdateProxy', () => {
   })
 
   it('returns null when proxy is disabled', () => {
-    expect(getUpdateProxy({ enable: false, server: 'http://p:8080', scope: ['update-app'] })).toBeNull()
+    expect(getUpdateProxy({ mode: 'direct', server: 'http://p:8080', scope: ['update-app'] })).toBeNull()
   })
 
   it('returns null when no server', () => {
-    expect(getUpdateProxy({ enable: true, server: '', scope: ['update-app'] })).toBeNull()
+    expect(getUpdateProxy({ mode: 'manual', server: '', scope: ['update-app'] })).toBeNull()
   })
 
   it('returns null when scope does not include update-app', () => {
-    expect(getUpdateProxy({ enable: true, server: 'http://p:8080', scope: ['download'] })).toBeNull()
+    expect(getUpdateProxy({ mode: 'manual', server: 'http://p:8080', scope: ['download'] })).toBeNull()
   })
 
   it('returns server when fully configured', () => {
-    expect(getUpdateProxy({ enable: true, server: 'http://p:8080', scope: ['update-app'] })).toBe('http://p:8080')
+    expect(getUpdateProxy({ mode: 'manual', server: 'http://p:8080', scope: ['update-app'] })).toBe('http://p:8080')
   })
 
   it('adds encoded proxy credentials when configured', () => {
     expect(
       getUpdateProxy({
-        enable: true,
+        mode: 'manual',
         server: 'http://p:8080',
         username: 'user@example.com',
         password: 'pa:ss word',
@@ -223,7 +223,7 @@ describe('getUpdateProxy', () => {
   })
 
   it('returns null when scope is missing', () => {
-    expect(getUpdateProxy({ enable: true, server: 'http://p:8080' })).toBeNull()
+    expect(getUpdateProxy({ mode: 'manual', server: 'http://p:8080' })).toBeNull()
   })
 })
 

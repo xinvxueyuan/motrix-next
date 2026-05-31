@@ -2,7 +2,7 @@
 /** @fileoverview Advanced task options panel (UA, auth, referer, cookie, proxy checkbox). */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { NFormItem, NInput, NCheckbox, NCollapseTransition, NButton, NRadioGroup, NRadio, NIcon } from 'naive-ui'
+import { NFormItem, NInput, NCheckbox, NCollapseTransition, NButton, NSwitch, NIcon } from 'naive-ui'
 import { hasUnsafeHeaderChars, sanitizeHeaderValue } from '@shared/utils/headerSanitize'
 import { useSystemProxyDetect } from '@/composables/useSystemProxyDetect'
 import { useAppMessage } from '@/composables/useAppMessage'
@@ -139,18 +139,15 @@ const { detecting: detectingProxy, detect: detectProxy } = useSystemProxyDetect(
           @update:value="$emit('update:cookie', $event)"
         />
       </NFormItem>
-      <NFormItem :label="t('task.task-proxy-label') + ':'">
-        <div class="proxy-radio-group">
-          <NRadioGroup
-            :value="proxyMode"
-            name="add-task-proxy-mode"
-            @update:value="$emit('update:proxyMode', $event as TaskProxyMode)"
-          >
-            <NRadio value="direct">{{ t('task.proxy-mode-direct') }}</NRadio>
-            <NRadio value="auto">{{ t('task.proxy-mode-auto') }}</NRadio>
-            <NRadio value="manual">{{ t('task.proxy-mode-manual') }}</NRadio>
-          </NRadioGroup>
-          <NCollapseTransition :show="proxyMode === 'manual'">
+      <NFormItem :label="t('task.use-proxy') + ':'">
+        <NSwitch
+          :value="proxyMode === 'manual'"
+          @update:value="$emit('update:proxyMode', $event ? 'manual' : 'direct')"
+        />
+      </NFormItem>
+      <NFormItem label=" " :show-feedback="false" class="proxy-options-item">
+        <NCollapseTransition :show="proxyMode === 'manual'">
+          <div class="proxy-radio-group">
             <div class="custom-proxy-input">
               <NInput
                 :value="customProxy"
@@ -176,8 +173,8 @@ const { detecting: detectingProxy, detect: detectProxy } = useSystemProxyDetect(
                 {{ t('preferences.detect-system-proxy') }}
               </NButton>
             </div>
-          </NCollapseTransition>
-        </div>
+          </div>
+        </NCollapseTransition>
       </NFormItem>
     </div>
   </NCollapseTransition>
@@ -233,7 +230,6 @@ const { detecting: detectingProxy, detect: detectProxy } = useSystemProxyDetect(
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-top: 6px;
 }
 .custom-proxy-input .n-button {
   align-self: flex-start;

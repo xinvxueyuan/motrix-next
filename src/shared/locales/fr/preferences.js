@@ -94,10 +94,6 @@ export default {
   'language-changed-later': 'Plus tard',
   'change-language': 'Changer de langue',
   proxy: 'Proxy',
-  'proxy-mode': 'Mode proxy',
-  'proxy-mode-direct': 'Proxy désactivé',
-  'proxy-mode-auto': "Hériter du proxy d'environnement",
-  'proxy-mode-manual': 'Proxy manuel',
   'proxy-new-task-only-hint':
     "Les paramètres du proxy ne s'appliquent qu'aux nouvelles tâches, les tâches existantes doivent être modifiées dans les détails de la tâche.",
   'proxy-bypass': 'Contournement du proxy',
@@ -134,7 +130,8 @@ export default {
   'invalid-proxy-url': 'Invalid proxy URL format',
   'proxy-unsupported-protocol':
     'Protocole proxy non pris en charge. Aria2 Next ne prend en charge que le proxy HTTP (http/https/ftp).',
-  'proxy-http-only-hint': "Aria2 Next ne prend en charge que le proxy HTTP. Le proxy SOCKS n'est pas pris en charge.",
+  'proxy-http-only-hint': 'Seuls les proxys HTTP sont pris en charge, les proxys SOCKS ne sont pas pris en charge',
+  'proxy-request-scope-hint': 'Seules les requêtes de téléchargement passent par le proxy, pas les connexions aux pairs BT/ED2K',
   'user-agent-string': 'Chaîne UA',
   port: "Ports d'écoute",
   'auto-change-conflicting-ports': 'Changer automatiquement les ports en conflit',
