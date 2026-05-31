@@ -18,6 +18,7 @@ defineProps<{
   flex-direction: column;
   gap: 4px;
   max-width: 220px;
+  padding-bottom: 29.25px;
   line-height: 1.35;
   white-space: normal;
 }
